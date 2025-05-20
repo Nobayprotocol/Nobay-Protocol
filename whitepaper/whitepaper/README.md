@@ -2,8 +2,7 @@
 
 This folder contains the official whitepaper for the Nobay Protocol.
 
-**Document:** [`Nobay_Whitepaper.pdf`](./Nobay_Whitepaper.pdf)
-
+**Document:** [`Nobay_Whitepaper.pdf`](../Nobay_Whitepaper.pdf)
 ---
 
 ## Overview
