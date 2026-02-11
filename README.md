@@ -90,6 +90,19 @@ Community links:
 - Twitter/X: [@nobayprotocol](https://twitter.com/nobayprotocol)  
 - Discord: [Join the DAO] *(placeholder)*
 
+## Smart Contract Testing (Hardhat)
+
+```bash
+npm install
+npm test
+```
+
+The initial `ListingRegistry` test suite covers:
+- valid signature verification (EIP-712)
+- rejection of invalid signatures
+- event emission checks
+- seller mapping and metadata integrity
+
 ---
 
 ## Contribute
