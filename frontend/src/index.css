@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-slate-900 text-white min-h-screen;
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-nobay-600 hover:bg-nobay-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200;
+  }
+  
+  .card {
+    @apply bg-slate-800 rounded-xl border border-slate-700 p-6 shadow-lg hover:shadow-xl transition-shadow;
+  }
+  
+  .tier-badge {
+    @apply px-3 py-1 rounded-full text-xs font-semibold;
+  }
+  
+  .tier-0 {
+    @apply bg-gray-600 text-gray-200;
+  }
+  
+  .tier-1 {
+    @apply bg-blue-600 text-blue-100;
+  }
+  
+  .tier-2 {
+    @apply bg-purple-600 text-purple-100;
+  }
+  
+  .tier-3 {
+    @apply bg-yellow-600 text-yellow-100;
+  }
+}
