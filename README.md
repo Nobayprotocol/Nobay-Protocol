@@ -85,6 +85,13 @@ nobay-protocol/
 - [Tokenomics](./docs/tokenomics.md)  
 - [Governance](./docs/governance.md)  
 
+## Smart Contract Tests
+
+```bash
+npm install
+npm test
+```
+
 Community links:
 - Website (coming soon): https://nobay.xyz  
 - Twitter/X: [@nobayprotocol](https://twitter.com/nobayprotocol)  

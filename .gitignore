@@ -1,6 +1,8 @@
 # Remix compiler artifacts
 **/artifacts/
 **/artifacts/**
+cache/
+node_modules/
 
 # Remix plugin state folders
 deps/
