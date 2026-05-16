@@ -12,4 +12,5 @@ states/
 
 # Optional
 .env
-.env.local
+.env.localnode_modules/
+cache/

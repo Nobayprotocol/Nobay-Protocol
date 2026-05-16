@@ -27,7 +27,7 @@ contract ListingRegistry is Ownable {
     event ListingVerified(uint256 indexed listingId, address indexed seller, string uri, uint256 timestamp);
     event ListingRevoked(uint256 indexed listingId, address indexed seller, uint256 timestamp);
 
-    constructor() {
+    constructor() Ownable(msg.sender) {
         uint256 chainId;
         assembly {
             chainId := chainid()

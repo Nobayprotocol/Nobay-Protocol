@@ -24,7 +24,7 @@ contract StakingModule is Ownable {
     event Staked(address indexed seller, uint256 amount, uint256 timestamp);
     event Unstaked(address indexed seller, uint256 amount, uint256 timestamp);
 
-    constructor(address _nobay) {
+    constructor(address _nobay) Ownable(msg.sender) {
         nobay = IERC20(_nobay);
     }
 
