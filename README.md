@@ -74,6 +74,19 @@ nobay-protocol/
 ├── frontend/                   # Reference wallet-native interface (optional)
 ├── scripts/                    # Deployment, migration, and setup tools
 └── test/                       # Hardhat/Foundry unit tests
+
+## Getting Started
+
+### Prerequisites
+- Node.js v18+
+- pnpm
+
+### Testing (Hardhat)
+To run the comprehensive test suite for `ListingRegistry.sol`:
+```bash
+pnpm install
+npx hardhat test
+```
 ```
 
 ---
