@@ -1,15 +1,6 @@
-# Remix compiler artifacts
-**/artifacts/
-**/artifacts/**
-
-# Remix plugin state folders
-deps/
-states/
-
-# Debug info
-*.dbg.json
-*.tsbuildinfo
-
-# Optional
+node_modules/
+artifacts/
+cache/
+coverage/
+typechain-types/
 .env
-.env.local

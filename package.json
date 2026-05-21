@@ -1,0 +1,14 @@
+{
+  "name": "nobay-protocol",
+  "version": "1.0.0",
+  "devDependencies": {
+    "hardhat": "^2.22.14",
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "chai": "^4.2.0",
+    "ethers": "^6.4.0",
+    "@nomicfoundation/hardhat-ethers": "^3.0.0"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "4.9.3"
+  }
+}
