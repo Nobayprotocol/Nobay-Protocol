@@ -13,3 +13,11 @@ states/
 # Optional
 .env
 .env.local
+
+# Node / Hardhat
+node_modules/
+cache/
+coverage/
+coverage.json
+typechain/
+typechain-types/
