@@ -6,10 +6,11 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 /// @title StakingModule
 /// @notice Allows sellers to stake $NOBAY for trust tier assignment
-/// @dev Modular contract, upgradeable by DAO later, no slashing in MVP
+/// @dev Modular contract, upgradeable by DAO later
 
 contract StakingModule is Ownable {
     IERC20 public immutable nobay;
+    address public slashingModule;
 
     struct Stake {
         uint256 amount;
@@ -23,9 +24,16 @@ contract StakingModule is Ownable {
 
     event Staked(address indexed seller, uint256 amount, uint256 timestamp);
     event Unstaked(address indexed seller, uint256 amount, uint256 timestamp);
+    event SlashingModuleUpdated(address indexed module);
+    event Slashed(address indexed seller, address indexed recipient, uint256 amount, string reason, uint256 timestamp);
 
     constructor(address _nobay) {
         nobay = IERC20(_nobay);
+    }
+
+    modifier onlySlashingModule() {
+        require(msg.sender == slashingModule && slashingModule != address(0), "Not slashing module");
+        _;
     }
 
     /// @notice Stake $NOBAY tokens to enter trust tiers
@@ -33,7 +41,7 @@ contract StakingModule is Ownable {
     function stake(uint256 amount) external {
         require(amount > 0, "Cannot stake zero");
 
-        nobay.transferFrom(msg.sender, address(this), amount);
+        require(nobay.transferFrom(msg.sender, address(this), amount), "Stake transfer failed");
 
         stakes[msg.sender].amount += amount;
         stakes[msg.sender].timestamp = block.timestamp;
@@ -54,8 +62,39 @@ contract StakingModule is Ownable {
         s.amount = 0;
         s.active = false;
 
-        nobay.transfer(msg.sender, amount);
+        require(nobay.transfer(msg.sender, amount), "Unstake transfer failed");
         emit Unstaked(msg.sender, amount, block.timestamp);
+    }
+
+    /// @notice Slash a seller's active stake through the configured slashing module
+    /// @dev Restarts the seller cooldown on partial slash to prevent immediate exit after a dispute
+    /// @param seller Seller whose stake should be slashed
+    /// @param amount Number of staked $NOBAY tokens to slash
+    /// @param recipient Address receiving the slashed stake, usually the DAO treasury
+    /// @param reason Human-readable DAO/dispute reason emitted for indexers
+    function slash(
+        address seller,
+        uint256 amount,
+        address recipient,
+        string calldata reason
+    ) external onlySlashingModule {
+        require(seller != address(0), "Invalid seller");
+        require(recipient != address(0), "Invalid recipient");
+        require(amount > 0, "Cannot slash zero");
+
+        Stake storage s = stakes[seller];
+        require(s.active, "No active stake");
+        require(s.amount >= amount, "Insufficient stake");
+
+        s.amount -= amount;
+        if (s.amount == 0) {
+            s.active = false;
+        } else {
+            s.timestamp = block.timestamp;
+        }
+
+        require(nobay.transfer(recipient, amount), "Slash transfer failed");
+        emit Slashed(seller, recipient, amount, reason, block.timestamp);
     }
 
     /// @notice Returns current trust tier based on stake amount
@@ -70,5 +109,16 @@ contract StakingModule is Ownable {
     /// @notice Allows DAO/owner to update cooldown window
     function setCooldown(uint256 newCooldown) external onlyOwner {
         cooldownPeriod = newCooldown;
+    }
+
+    /// @notice Sets the module allowed to slash seller stakes
+    function setSlashingModule(address module) external onlyOwner {
+        slashingModule = module;
+        emit SlashingModuleUpdated(module);
+    }
+
+    /// @notice Returns the seller's current staked amount for external modules
+    function stakedBalance(address seller) external view returns (uint256) {
+        return stakes[seller].amount;
     }
 }
