@@ -516,3 +516,130 @@ describe("ListingRegistry", function () {
   });
 
 });
+
+  // 更多边界条件测试
+  describe("More Boundary Conditions", function () {
+    it("Should handle very long URI", async function () {
+      const longUri = "Qm" + "x".repeat(1000);
+      const domainSeparator = await listingRegistry.DOMAIN_SEPARATOR();
+      
+      const digest = ethers.utils.keccak256(
+        ethers.utils.solidityPack(
+          ["bytes2", "bytes32", "bytes32"],
+          [
+            "0x1901",
+            domainSeparator,
+            ethers.utils.keccak256(
+              ethers.utils.defaultAbiCoder.encode(
+                ["bytes32", "address", "bytes32", "uint256"],
+                [TYPEHASH, seller.address, ethers.utils.keccak256(ethers.utils.toUtf8Bytes(longUri)), testTimestamp]
+              )
+            )
+          ]
+        )
+      );
+
+      const signature = await seller.signMessage(ethers.utils.arrayify(digest));
+
+      const tx = await listingRegistry.submitListingWithSig(
+        seller.address,
+        longUri,
+        testTimestamp,
+        signature
+      );
+
+      const listing = await listingRegistry.listings(0);
+      expect(listing.uri).to.equal(longUri);
+    });
+
+    it("Should handle future timestamp", async function () {
+      const futureTimestamp = Math.floor(Date.now() / 1000) + 86400; // +1 day
+      const domainSeparator = await listingRegistry.DOMAIN_SEPARATOR();
+      
+      const digest = ethers.utils.keccak256(
+        ethers.utils.solidityPack(
+          ["bytes2", "bytes32", "bytes32"],
+          [
+            "0x1901",
+            domainSeparator,
+            ethers.utils.keccak256(
+              ethers.utils.defaultAbiCoder.encode(
+                ["bytes32", "address", "bytes32", "uint256"],
+                [TYPEHASH, seller.address, ethers.utils.keccak256(ethers.utils.toUtf8Bytes(testUri)), futureTimestamp]
+              )
+            )
+          ]
+        )
+      );
+
+      const signature = await seller.signMessage(ethers.utils.arrayify(digest));
+
+      const tx = await listingRegistry.submitListingWithSig(
+        seller.address,
+        testUri,
+        futureTimestamp,
+        signature
+      );
+
+      const listing = await listingRegistry.listings(0);
+      expect(listing.timestamp).to.equal(futureTimestamp);
+    });
+  });
+
+  // 更多权限控制测试
+  describe("More Permission Control", function () {
+    it("Should not allow revoking inactive listing", async function () {
+      const domainSeparator = await listingRegistry.DOMAIN_SEPARATOR();
+      
+      const digest = ethers.utils.keccak256(
+        ethers.utils.solidityPack(
+          ["bytes2", "bytes32", "bytes32"],
+          [
+            "0x1901",
+            domainSeparator,
+            ethers.utils.keccak256(
+              ethers.utils.defaultAbiCoder.encode(
+                ["bytes32", "address", "bytes32", "uint256"],
+                [TYPEHASH, seller.address, ethers.utils.keccak256(ethers.utils.toUtf8Bytes(testUri)), testTimestamp]
+              )
+            )
+          ]
+        )
+      );
+
+      const signature = await seller.signMessage(ethers.utils.arrayify(digest));
+
+      await listingRegistry.submitListingWithSig(
+        seller.address,
+        testUri,
+        testTimestamp,
+        signature
+      );
+
+      // 先撤销
+      await listingRegistry.connect(seller).revokeListing(0);
+
+      // 再次撤销应该失败
+      await expect(
+        listingRegistry.connect(seller).revokeListing(0)
+      ).to.be.revertedWith("Already inactive");
+    });
+  });
+
+  // 错误处理测试
+  describe("Error Handling", function () {
+    it("Should reject invalid signature length", async function () {
+      const invalidSignature = "0x1234"; // 太短
+      
+      await expect(
+        listingRegistry.submitListingWithSig(
+          seller.address,
+          testUri,
+          testTimestamp,
+          invalidSignature
+        )
+      ).to.be.revertedWith("Invalid signature length");
+    });
+  });
+
+});
