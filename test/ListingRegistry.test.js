@@ -413,3 +413,106 @@ describe("ListingRegistry", function () {
     return block.timestamp;
   }
 });
+
+  // 边界条件测试
+  describe("Boundary Conditions", function () {
+    it("Should handle empty URI", async function () {
+      const domainSeparator = await listingRegistry.DOMAIN_SEPARATOR();
+      
+      const digest = ethers.utils.keccak256(
+        ethers.utils.solidityPack(
+          ["bytes2", "bytes32", "bytes32"],
+          [
+            "0x1901",
+            domainSeparator,
+            ethers.utils.keccak256(
+              ethers.utils.defaultAbiCoder.encode(
+                ["bytes32", "address", "bytes32", "uint256"],
+                [TYPEHASH, seller.address, ethers.utils.keccak256(ethers.utils.toUtf8Bytes("")), testTimestamp]
+              )
+            )
+          ]
+        )
+      );
+
+      const signature = await seller.signMessage(ethers.utils.arrayify(digest));
+
+      const tx = await listingRegistry.submitListingWithSig(
+        seller.address,
+        "",
+        testTimestamp,
+        signature
+      );
+
+      const listing = await listingRegistry.listings(0);
+      expect(listing.uri).to.equal("");
+    });
+  });
+
+  // 权限控制测试
+  describe("Permission Control", function () {
+    it("Should only allow seller to revoke", async function () {
+      const domainSeparator = await listingRegistry.DOMAIN_SEPARATOR();
+      
+      const digest = ethers.utils.keccak256(
+        ethers.utils.solidityPack(
+          ["bytes2", "bytes32", "bytes32"],
+          [
+            "0x1901",
+            domainSeparator,
+            ethers.utils.keccak256(
+              ethers.utils.defaultAbiCoder.encode(
+                ["bytes32", "address", "bytes32", "uint256"],
+                [TYPEHASH, seller.address, ethers.utils.keccak256(ethers.utils.toUtf8Bytes(testUri)), testTimestamp]
+              )
+            )
+          ]
+        )
+      );
+
+      const signature = await seller.signMessage(ethers.utils.arrayify(digest));
+
+      await listingRegistry.submitListingWithSig(
+        seller.address,
+        testUri,
+        testTimestamp,
+        signature
+      );
+
+      await expect(
+        listingRegistry.connect(attacker).revokeListing(0)
+      ).to.be.revertedWith("Not your listing");
+    });
+  });
+
+  // 多个listing测试
+  describe("Multiple Listings", function () {
+    it("Should handle multiple listings", async function () {
+      const domainSeparator = await listingRegistry.DOMAIN_SEPARATOR();
+      
+      for (let i = 0; i < 3; i++) {
+        const digest = ethers.utils.keccak256(
+          ethers.utils.solidityPack(
+            ["bytes2", "bytes32", "bytes32"],
+            [
+              "0x1901",
+              domainSeparator,
+              ethers.utils.keccak256(
+                ethers.utils.defaultAbiCoder.encode(
+                  ["bytes32", "address", "bytes32", "uint256"],
+                  [TYPEHASH, seller.address, ethers.utils.keccak256(ethers.utils.toUtf8Bytes("uri" + i)), testTimestamp + i]
+                )
+              )
+            ]
+          )
+        );
+
+        const signature = await seller.signMessage(ethers.utils.arrayify(digest));
+        await listingRegistry.submitListingWithSig(seller.address, "uri" + i, testTimestamp + i, signature);
+      }
+
+      expect(await listingRegistry.listingCount()).to.equal(3);
+    });
+  });
+
+});
