@@ -1,55 +1,70 @@
-# Nobay Frontend (Prototype)
+# Nobay Protocol — Listing Discovery Engine
 
-This folder will house reference interfaces, frontends, and wallet-native experiences for interacting with the Nobay Protocol.
+A simple web interface that pulls verified listings from the Nobay Protocol ListingRegistry contract.
 
-We welcome forks, new UIs, and minimalist discovery engines.
+## Features
 
----
+- Connect via MetaMask or WalletConnect
+- Read ListingVerified events from the contract
+- Display seller trust tier from StakingModule
+- Filter by keyword, trust tier, or timestamp
+- PWA support (installable, offline-capable)
 
-## Goals
+## Stack
 
-- Wallet-native interface (MetaMask, WalletConnect)
-- Display listings from `ListingRegistry.sol`
-- Show seller trust tiers (from `StakingModule.sol`)
-- Optional: initiate escrow (ETH or token payments)
-- Optional: submit a listing (off-chain signed URI + signature)
+- React 18 + Vite
+- ethers.js v6 for blockchain interaction
+- Tailwind CSS for styling
+- RainbowKit for wallet connection
 
----
+## Setup
 
-## Stack Recommendation (Optional)
+```bash
+cd frontend/app
+npm install
+npm run dev
+```
 
-You may use:
-- React or Next.js (for listing browser)
-- Wagmi + RainbowKit (wallet handling)
-- Ethers.js or Viem (contract reads/writes)
-- Tailwind or UI-neutral styles
+## Smart Contract Integration
 
-Forks can use SvelteKit, Vue, or vanilla JS.
+The app connects to deployed Nobay Protocol contracts:
 
----
+- **ListingRegistry**: Reads `ListingVerified` events and listing data
+- **StakingModule**: Reads seller trust tiers via `getTier(address)`
+- **SlashingModule**: (Optional) Displays slash history
 
-## Suggested MVP Flow
+### Supported Networks
 
-- Connect wallet  
-- Browse `ListingVerified` events  
-- Pull metadata via IPFS  
-- Show seller trust badge (Tier 0–3)  
-- Optional: button to submit listing via EIP-712 signature + URI
+- Base Mainnet (chainId: 8453)
+- Base Sepolia Testnet (chainId: 84532)
+- Hardhat Local (chainId: 31337)
 
----
+## Project Structure
 
-## Contributing
+```
+app/
+├── src/
+│   ├── components/
+│   │   ├── ConnectWallet.tsx    # Wallet connection button
+│   │   ├── ListingCard.tsx      # Individual listing display
+│   │   ├── ListingGrid.tsx      # Grid of all listings
+│   │   ├── FilterBar.tsx        # Search and filter controls
+│   │   └── TrustBadge.tsx       # Trust tier badge
+│   ├── hooks/
+│   │   ├── useListings.ts       # Fetch listings from contract
+│   │   ├── useTrustTier.ts      # Fetch seller trust tier
+│   │   └── useContract.ts       # Contract interaction hook
+│   ├── contracts/
+│   │   ├── abi/                 # Contract ABIs
+│   │   └── addresses.ts         # Deployed addresses per chain
+│   ├── App.tsx                  # Main app component
+│   └── main.tsx                 # Entry point
+├── public/
+│   ├── manifest.json            # PWA manifest
+│   └── icons/                   # PWA icons
+└── package.json
+```
 
-Open an issue or PR to discuss frontend architecture.  
-Feel free to create alternate UIs for:
+## License
 
-- Niche marketplaces (e.g., physical art, freelance, rare books)  
-- Localized forks (e.g., EU, LatAm, SEA markets)  
-- Dark/industrial UI variants for discovery pages
-
----
-
-## Build Status
-
-This folder is awaiting its first contributor-built PWA.  
-Want to help? Open [Issue #2](https://github.com/Nobayprotocol/Nobay-Protocol/issues/2) to get started.
+MIT — Nobay Protocol is forkable infrastructure.
