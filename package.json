@@ -1,0 +1,15 @@
+{
+  "name": "nobay-protocol-tests",
+  "version": "1.0.0",
+  "description": "Hardhat test suite for Nobay Protocol smart contracts",
+  "scripts": {
+    "test": "hardhat test",
+    "compile": "hardhat compile",
+    "coverage": "hardhat coverage"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@openzeppelin/contracts": "^4.9.0",
+    "hardhat": "^2.22.0"
+  }
+}
