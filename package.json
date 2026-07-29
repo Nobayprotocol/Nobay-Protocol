@@ -1,0 +1,32 @@
+{
+  "name": "nobay-protocol",
+  "version": "1.0.0",
+  "description": "**Nobay** is a modular, open-source protocol for decentralized marketplaces.  \r It replaces rent-seeking platforms with public infrastructure — enabling trustless, permissionless trade without custodians or centralized listing control.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nobayprotocol/Nobay-Protocol.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Nobayprotocol/Nobay-Protocol/issues"
+  },
+  "homepage": "https://github.com/Nobayprotocol/Nobay-Protocol#readme",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-chai-matchers": "^2.1.2",
+    "@nomicfoundation/hardhat-toolbox": "^6.1.2",
+    "@openzeppelin/contracts": "^4.9.6",
+    "chai": "^4.5.0",
+    "ethers": "^6.17.0",
+    "hardhat": "^2.29.0"
+  }
+}
