@@ -71,4 +71,18 @@ contract StakingModule is Ownable {
     function setCooldown(uint256 newCooldown) external onlyOwner {
         cooldownPeriod = newCooldown;
     }
+
+    /// @notice Reduce a staker's balance (called by SlashingModule / DAO)
+    /// @param staker Address whose stake to reduce
+    /// @param amount Amount to slash
+    function slashStaker(address staker, uint256 amount) external onlyOwner {
+        Stake storage s = stakes[staker];
+        require(s.active, "No active stake");
+        require(amount > 0, "Cannot slash zero");
+        require(s.amount >= amount, "Insufficient stake");
+        s.amount -= amount;
+        if (s.amount == 0) {
+            s.active = false;
+        }
+    }
 }
