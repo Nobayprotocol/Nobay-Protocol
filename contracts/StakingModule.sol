@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 /// @notice Allows sellers to stake $NOBAY for trust tier assignment
 /// @dev Modular contract, upgradeable by DAO later, no slashing in MVP
 
-contract StakingModule is Ownable {
+contract StakingModule is Ownable(msg.sender) {
     IERC20 public immutable nobay;
 
     struct Stake {
