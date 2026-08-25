@@ -1,0 +1,14 @@
+{
+  "name": "nobay-protocol",
+  "version": "1.0.0",
+  "description": "Nobay Protocol - P2P marketplace smart contracts",
+  "scripts": {
+    "test": "hardhat test",
+    "compile": "hardhat compile"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@openzeppelin/contracts": "^5.0.2",
+    "hardhat": "^2.22.0"
+  }
+}

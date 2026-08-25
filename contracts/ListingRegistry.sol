@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 /// @notice EIP-712 compatible registry for verifying off-chain signed listings
 /// @dev Stores minimal metadata: seller, IPFS URI hash, signature verification
 
-contract ListingRegistry is Ownable {
+contract ListingRegistry is Ownable(msg.sender) {
     using ECDSA for bytes32;
 
     struct Listing {
