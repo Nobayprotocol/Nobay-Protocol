@@ -1,0 +1,21 @@
+{
+  "name": "nobay-protocol",
+  "version": "1.0.0",
+  "description": "**Nobay** is a modular, open-source protocol for decentralized marketplaces.   It replaces rent-seeking platforms with public infrastructure — enabling trustless, permissionless trade without custodians or centralized listing control.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@openzeppelin/contracts": "^4.9.6",
+    "hardhat": "^2.29.1"
+  }
+}
