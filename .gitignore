@@ -1,3 +1,10 @@
+# Node modules and build caches
+node_modules/
+cache/
+artifacts/
+typechain/
+typechain-types/
+
 # Remix compiler artifacts
 **/artifacts/
 **/artifacts/**

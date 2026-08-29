@@ -51,7 +51,24 @@ Funds are held in escrow until dispute window passes or dispute is resolved.
 
 ---
 
-## 4. Governance
+## 4. Slashing Module
+
+**File:** `contracts/SlashingModule.sol`
+
+### Purpose:
+Provides DAO-compatible and dispute-based slashing of seller stakes, plus dynamic trust score decay over time.
+
+### Key Features:
+- Direct DAO execution (`slashByDAO`) & on-chain proposal voting (`proposeSlash`, `castVote`, `executeSlashProposal`)
+- Dispute arbitrator resolution (`slashByDispute`) with replay protection
+- Trust decay and recovery system (`getTrustScore`, `applyTrustDecay`, `getEffectiveStake`)
+- Automatic transfer of slashed funds to protocol treasury
+- Cooldown timer reset on partial slashing to prevent exit front-running
+- Emits `Slashed(address, amount, reason)`
+
+---
+
+## 5. Governance
 
 **File:** `docs/governance.md`
 
@@ -63,7 +80,7 @@ Outlines governance transition:
 
 ---
 
-## 5. Token Utility
+## 6. Token Utility
 
 **File:** `docs/tokenomics.md`
 
@@ -76,12 +93,13 @@ Outlines governance transition:
 
 ## Interactions Summary
 
-| Module        | Inputs                            | Outputs                             |
-|---------------|-----------------------------------|--------------------------------------|
-| ListingRegistry | Signed listings (off-chain)     | ListingVerified events              |
-| StakingModule | $NOBAY stake                      | Tier level + Staked/Unstaked events |
-| Escrow        | Payment, seller addr, token       | Funds released or disputed          |
-| Governance    | Snapshot vote, DAO params         | Contract upgrades, treasury control |
+| Module          | Inputs                                | Outputs                                    |
+|-----------------|---------------------------------------|--------------------------------------------|
+| ListingRegistry | Signed listings (off-chain)           | ListingVerified events                     |
+| StakingModule   | $NOBAY stake                          | Tier level + Staked/Unstaked events        |
+| SlashingModule  | DAO vote / dispute ruling             | Slashed events, trust penalties, treasury  |
+| Escrow          | Payment, seller addr, token           | Funds released or disputed                 |
+| Governance      | Snapshot vote, DAO params             | Contract upgrades, treasury control        |
 
 ---
 
