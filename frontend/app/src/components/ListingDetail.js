@@ -1,0 +1,1 @@
+Create ListingDetail.js component that fetches and displays more detailed information about a specific listing, including seller's trust tier and badge indicators.

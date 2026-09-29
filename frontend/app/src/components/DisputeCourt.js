@@ -1,0 +1,1 @@
+Create DisputeCourt.js component that allows for dispute resolution via slashing-backed arbitration. Ensure it can be integrated with the existing escrow and dispute logic.

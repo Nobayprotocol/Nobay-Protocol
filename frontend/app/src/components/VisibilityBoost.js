@@ -1,0 +1,1 @@
+Create VisibilityBoost.js component that enables sellers to use $NOBAY to boost their listings on discovery feeds. Implement an opt-in escrow system to track these boosts.

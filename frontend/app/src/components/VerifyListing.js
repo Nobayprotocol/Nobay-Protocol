@@ -1,0 +1,1 @@
+Modify VerifyListing.js component to include wallet integration. Ensure listings can be verified by connecting to MetaMask or WalletConnect.
