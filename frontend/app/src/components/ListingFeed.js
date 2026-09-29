@@ -1,0 +1,1 @@
+Create ListingFeed.js component that fetches listings from ListingRegistry events. Ensure it handles filtering, sorting, and displaying relevant metadata.

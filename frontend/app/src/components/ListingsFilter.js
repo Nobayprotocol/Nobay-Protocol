@@ -1,0 +1,1 @@
+Create ListingsFilter.js component that allows filtering listings by keyword, trust tier, or timestamp. Implement dynamic filtering based on user input.
