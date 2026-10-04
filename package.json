@@ -1,0 +1,15 @@
+{
+  "name": "nobay-protocol",
+  "version": "1.0.0",
+  "description": "Moduilar protocol for decentralized marketplaces",
+  "scripts": {
+    "test": "hardhat test"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "hardhat": "^2.19.0"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.9.3"
+  }
+}
