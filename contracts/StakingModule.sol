@@ -58,6 +58,23 @@ contract StakingModule is Ownable {
         emit Unstaked(msg.sender, amount, block.timestamp);
     }
 
+    address public slashingModule;
+
+    function setSlashingModule(address _module) external onlyOwner {
+        slashingModule = _module;
+    }
+
+    function slash(address user, uint256 amount) external {
+        require(msg.sender == slashingModule, "Only slashing module");
+        Stake storage s = stakes[user];
+        require(s.amount >= amount, "Slash amount exceeds stake");
+        s.amount -= amount;
+        if (s.amount == 0) {
+            s.active = false;
+        }
+        nobay.transfer(owner(), amount);
+    }
+
     /// @notice Returns current trust tier based on stake amount
     function getTier(address seller) public view returns (uint8) {
         uint256 amount = stakes[seller].amount;
